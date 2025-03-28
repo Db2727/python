@@ -5,7 +5,7 @@ import openpyxl as ex
 from openpyxl import Workbook
 
 path = "test_tabelle.xlsx"
-company_path = "companys.xlsx"
+company_path = "company_names.xlsx"
 
 wb = ex.load_workbook(path)
 sheet = wb.active
