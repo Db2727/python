@@ -45,7 +45,7 @@ class Company:
 def read_data():
     for i in range(2, row + 1):
         current_student = []
-        for k in range(1, column + 1):
+        for k in range(2, column + 1):
             cell = sheet.cell(row=i, column=k)
             current_student.append(cell.value)
         p = Student(current_student[0], current_student[1], [current_student[2], current_student[3], current_student[4], current_student[5], current_student[6], current_student[7]])
