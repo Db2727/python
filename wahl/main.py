@@ -4,8 +4,8 @@ import random
 import openpyxl as ex
 from openpyxl import Workbook
 
-path = "test_tabelle.xlsx"
-company_path = "company_names.xlsx"
+path = "/workspaces/python/wahl/test_tabelle.xlsx"
+company_path = "/workspaces/python/wahl/company_names.xlsx"
 
 wb = ex.load_workbook(path)
 sheet = wb.active
@@ -39,7 +39,7 @@ class Company:
     def __init__(self, name):
         self.name = name
         self.students = []
-        self.max_space = 8
+        self.max_space = 20
 
 
 def read_data():
@@ -65,9 +65,11 @@ def add_student(wish_num, curr_student):
     num = get_num(comp_name) - 1
 
     if len(COMPANIES[num].students) == COMPANIES[num].max_space:
-
-        curr_student.wish_num += 1
-        add_student(curr_student.wish_num, curr_student)
+        if curr_student.wish_num < 5:
+            curr_student.wish_num += 1
+            add_student(curr_student.wish_num, curr_student)
+        else:
+            curr_student.courses.append("error2")
     else:
 
         COMPANIES[num].students.append(curr_student)
@@ -81,8 +83,10 @@ def main():
     for i in range(6):
         random.shuffle(STUDENTS)
         for curr_student in STUDENTS:
-            if len(curr_student.courses) < 3:
+            if len(curr_student.courses) < 3 and i + curr_student.wish_num < 6:
                 add_student(i + curr_student.wish_num, curr_student)
+            elif len(curr_student.courses) < 3 and i + curr_student.wish_num >= 6:
+                curr_student.courses.append("error")
 
 
 def write_data1():
