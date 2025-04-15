@@ -31,6 +31,7 @@ class Student:
         self.group = group
         self.choices = choices
         self.wish_num = 0
+        self.cnum = 0
         self.courses = []
 
 
@@ -38,8 +39,10 @@ class Company:
 
     def __init__(self, name):
         self.name = name
-        self.students = []
-        self.max_space = 20
+        self.block1 = []
+        self.block2 = []
+        self.block3 = []
+        self.max_space = 10
 
 
 def read_data():
@@ -70,6 +73,7 @@ def add_student(wish_num, curr_student):
             add_student(curr_student.wish_num, curr_student)
         else:
             curr_student.courses.append("error2")
+            curr_student.cnum += 1
     else:
 
         COMPANIES[num].students.append(curr_student)
@@ -87,6 +91,7 @@ def main():
                 add_student(i + curr_student.wish_num, curr_student)
             elif len(curr_student.courses) < 3 and i + curr_student.wish_num >= 6:
                 curr_student.courses.append("error")
+                curr_student.cnum += 1
 
 
 def write_data1():
