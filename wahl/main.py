@@ -4,8 +4,8 @@ import random
 import openpyxl as ex
 from openpyxl import Workbook
 
-path = "wahl/table.xlsx"
-company_path = "/workspaces/python/wahl/company_names.xlsx"
+path = "wahl/tabelle.xlsx"
+company_path = "wahl/company_names.xlsx"
 
 wb = ex.load_workbook(path)
 sheet = wb.active
