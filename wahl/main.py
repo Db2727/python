@@ -4,9 +4,9 @@ import random
 import openpyxl as ex
 from openpyxl import Workbook
 
-path = "/workspaces/python/wahl/test_tabelle.xlsx"
-company_path = "/workspaces/python/wahl/company_names.xlsx"
-
+path = "wahl/test_tabelle.xlsx"
+company_path = "wahl/company_names.xlsx"
+n = 1
 wb = ex.load_workbook(path)
 sheet = wb.active
 
@@ -31,6 +31,7 @@ class Student:
         self.group = group
         self.choices = choices
         self.wish_num = 0
+        self.course_num = 0
         self.courses = []
 
 
@@ -38,8 +39,8 @@ class Company:
 
     def __init__(self, name):
         self.name = name
-        self.students = []
-        self.max_space = 20
+        self.students = [[],[],[]]
+        self.max_space = 10
 
 
 def read_data():
@@ -64,20 +65,29 @@ def add_student(wish_num, curr_student):
     comp_name = curr_student.choices[wish_num]
     num = get_num(comp_name) - 1
 
-    if len(COMPANIES[num].students) == COMPANIES[num].max_space:
+    if len(COMPANIES[num].students[curr_student.course_num]) == COMPANIES[num].max_space:
         if curr_student.wish_num < 5:
             curr_student.wish_num += 1
             add_student(curr_student.wish_num, curr_student)
         else:
-            curr_student.courses.append("error2")
+            append_course(curr_student, "error2")
     else:
 
-        COMPANIES[num].students.append(curr_student)
-        curr_student.courses.append(comp_name)
+        
+        if curr_student.course_num < 3:
+            COMPANIES[num].students[curr_student.course_num].append(curr_student.name)
+            curr_student.courses.append(comp_name)
+            curr_student.course_num = curr_student.course_num + 1
+        
 
 def get_num(name):
+    global n
+    print(n)
+    print(name)
     x = name.split(".", 1)
+    n += 1
     return int(x[0])
+    
 
 def main():
     for i in range(6):
@@ -86,7 +96,12 @@ def main():
             if len(curr_student.courses) < 3 and i + curr_student.wish_num < 6:
                 add_student(i + curr_student.wish_num, curr_student)
             elif len(curr_student.courses) < 3 and i + curr_student.wish_num >= 6:
-                curr_student.courses.append("error")
+                append_course(curr_student, "error")
+
+
+def append_course(student, course):
+    student.courses.append(course)
+    student.course_num += 1
 
 
 def write_data1():
@@ -109,22 +124,27 @@ def write_data1():
     wb1.save(filename="liste.xlsx")
 
 
-def write_data2():
+def write_data2(it, name):
     wb1 = Workbook()
     sheet1 = wb1.active
-
+    
     for i in range(1, len(COMPANIES) + 1):
+        print(len(COMPANIES[i - 1].students[it]))
         sheet1.cell(row=1, column=i).value = COMPANIES[i - 1].name
-        for k in range(2, len(COMPANIES[i - 1].students) + 2):
-            sheet1.cell(row=k, column=i).value = COMPANIES[i - 1].students[k - 2].name
+        for k in range(2, len(COMPANIES[i - 1].students[it]) + 2):
+            print(COMPANIES[i - 1].students[it] [k - 2])
+            sheet1.cell(row=k, column=i).value = COMPANIES[i - 1].students[it] [k - 2]
+    
+    wb1.save(filename = name)
 
-    wb1.save(filename="Firmen-Liste.xlsx")
-
+def write_data3():
+    wb1 = Workbook()
+    sheet1 = wb1.active
 
 read_data()
 main()
 write_data1()
-write_data2()
+write_data2(0,"tb1.xlsx")
+write_data2(1,"tb2.xlsx")
+write_data2(2,"tb3.xlsx")
 
-for student in STUDENTS:
-    print(student.name, student.choices, student.courses)
